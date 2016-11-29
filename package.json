@@ -2,11 +2,12 @@
   "name": "y",
   "version": "1.0.0",
   "description": "URL shortener",
-  "main": "index.js",
+  "main": "/lib/index.js",
   "scripts": {
-    "start": "webpack-dev-server --hot --inline",
+    "start": "concurrently -k 'npm run server' 'webpack --watch'",
     "build": "webpack",
-    "test": "mocha"
+    "test": "mocha",
+    "server": "node lib/server.js"
   },
   "author": "Casey Metz and Kyle Misencik",
   "license": "ISC",
@@ -22,6 +23,7 @@
   },
   "dependencies": {
     "body-parser": "^1.15.2",
+    "concurrently": "^3.1.0",
     "express": "^4.14.0"
   }
 }

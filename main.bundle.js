@@ -46,8 +46,24 @@
 
 	'use strict';
 
-	module.exports = function () {
-	  return console.log('setup');
+	var $urlDisplay = $('.url-display');
+
+	$('.tinyify-form').on('submit', function (e) {
+	  e.preventDefault();
+	  var longUrl = $('.long-url').val();
+	  var data = {
+	    longUrl: longUrl
+	  };
+	  $.post('http://localhost:3000/urls', data).then(turnUrlIntoElement).then(putUrlOnPage);
+	});
+
+	var turnUrlIntoElement = function turnUrlIntoElement(response) {
+	  console.log(response);
+	  return $('<a href=\'http://localhost:3000/' + response.id + '\' target=\'_blank\'>http://localhost:3000/' + response.id + '</a>');
+	};
+
+	var putUrlOnPage = function putUrlOnPage(element) {
+	  $urlDisplay.html(element);
 	};
 
 /***/ }
