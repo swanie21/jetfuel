@@ -14,7 +14,7 @@ describe('GET /', () => {
 describe('GET /urls', () => {
 
   beforeEach(() => {
-    app.locals.db.urls.data = [{"id":"HkrRLh2Ge","longUrl":"https://www.google.com/"}];
+    app.locals.db.urls.data = [{id:"HkrRLh2Ge",longUrl:"https://www.google.com/"}];
   });
 
   afterEach(() => {
@@ -38,7 +38,7 @@ describe('GET /urls', () => {
 
 describe('GET /:id', () => {
   beforeEach(() => {
-    this.url = {"id":"HkrRLh2Ge","longUrl":"https://www.google.com/"};
+    this.url = {id:"HkrRLh2Ge",longUrl:"https://www.google.com/"};
     app.locals.db.urls.data = [this.url];
   });
 
@@ -56,7 +56,7 @@ describe('GET /:id', () => {
 
 describe('GET /:id', () => {
   beforeEach(() => {
-    this.url = {"id":"HkrRLh2Ge"};
+    this.url = {id:"HkrRLh2Ge"};
     app.locals.db.urls.data = [this.url];
   });
 
@@ -68,5 +68,34 @@ describe('GET /:id', () => {
     request(app)
       .get(`/${this.url.id}`)
         .expect(404, done);
+  });
+});
+
+describe('POST /urls', () => {
+
+  beforeEach(() => {
+    app.locals.db.urls.data = [];
+  });
+
+  it('should create a new url', (done) => {
+    const url = 'https://www.google.com/';
+
+    request(app)
+      .post('/urls')
+      .send(url)
+      .expect(201)
+      .end(() => {
+        assert.equal(app.locals.db.urls.data.length, 1);
+        done();
+      });
+  });
+
+  it('should return a 422 if the request is missing a longUrl', (done) => {
+    const url = { };
+
+    request(app)
+      .post('/urls')
+      .send({ url })
+      .expect(422, done);
   });
 });
