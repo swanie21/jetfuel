@@ -21,24 +21,36 @@ app.get('/', (request, response) => {
   });
 });
 
+// app.get('/urls', (request, response) => {
+//   response.send({ urls: app.locals.db.urls.data });
+// });
+
 app.get('/urls', (request, response) => {
-  response.send({ urls: app.locals.db.urls.data });
+  response.json(app.locals.db.urls.data);
 });
 
 app.get('/:id', (request, response) => {
-  let longUrl = app.locals.db.urls.data.find( (url) => {
+
+  app.locals.db.urls.data.forEach( (url) => {
+    if (url.id === request.params.id){
+      url.clicks++;
+      return url;
+    }
+  });
+
+  let thisLink = app.locals.db.urls.data.find( (url) => {
     return url.id === request.params.id;
-  }).longUrl;
+  });
 
-  if(!longUrl) { return response.sendStatus(404); }
+  if(!thisLink) { return response.sendStatus(404); }
 
-  response.redirect(301, longUrl);
+  response.redirect(301, thisLink.longUrl);
 });
 
 app.post('/urls', (request, response) => {
   const { longUrl } = request.body;
   const id = shortid.generate();
-  const link = { id, longUrl };
+  const link = { id, longUrl, clicks: 0 };
   app.locals.db.urls.data.push(link);
 
   if (!longUrl) {
