@@ -9,7 +9,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Tinyify';
-app.locals.urls = {};
+app.locals.db = {
+  urls: {
+    data: []
+  }
+};
+
+//
+// { id: String, longUrl: String, visitCount: Number }
+//
 
 app.get('/', (request, response) => {
   fs.readFile(`${__dirname}/index.html`, (err, file) => {
@@ -19,7 +27,7 @@ app.get('/', (request, response) => {
 
 app.get('/:id', (request, response) => {
   const { id } = request.params;
-  const longUrl = app.locals.urls[id];
+  const longUrl = app.locals.db[id];
 
   if(!longUrl) { return response.sendStatus(404); }
 
@@ -29,7 +37,8 @@ app.get('/:id', (request, response) => {
 app.post('/urls', (request, response) => {
   const { longUrl } = request.body;
   const id = shortid.generate();
-  app.locals.urls[id] = longUrl;
+  const link = { id, longUrl, visitCount: 0 };
+  app.locals.db.urls.data.push(link);
 
   if (!longUrl) {
     return response.status(422).send({
@@ -37,7 +46,7 @@ app.post('/urls', (request, response) => {
     });
   }
 
-  response.json({ id, longUrl });
+  response.json(app.locals.db.urls.data);
 });
 
 app.listen(app.get('port'), () => {
