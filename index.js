@@ -21,6 +21,10 @@ app.get('/', (request, response) => {
   });
 });
 
+app.get('/urls', (request, response) => {
+  response.send({ urls: app.locals.db.urls.data });
+});
+
 app.get('/:id', (request, response) => {
   let longUrl = app.locals.db.urls.data.find( (url) => {
     return url.id === request.params.id;
@@ -46,6 +50,10 @@ app.post('/urls', (request, response) => {
   response.json(app.locals.db.urls.data);
 });
 
-app.listen(app.get('port'), () => {
-  console.log(`${app.locals.title} now listening on 3000`);
-});
+if (!module.parent) {
+  app.listen(app.get('port'), () => {
+    console.log(`${app.locals.title} now listening on 3000`);
+  });
+}
+
+module.exports = app;
