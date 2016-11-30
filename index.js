@@ -22,19 +22,21 @@ app.get('/', (request, response) => {
 });
 
 app.get('/:id', (request, response) => {
-  let longUrl = app.locals.db.urls.data.find( (url) => {
+  let thisLink = app.locals.db.urls.data.find( (url) => {
     return url.id === request.params.id;
-  }).longUrl;
+  });
 
-  if(!longUrl) { return response.sendStatus(404); }
+  thisLink.clicks++;
 
-  response.redirect(301, longUrl);
+  if(!thisLink) { return response.sendStatus(404); }
+
+  response.redirect(301, thisLink.longUrl);
 });
 
 app.post('/urls', (request, response) => {
   const { longUrl } = request.body;
   const id = shortid.generate();
-  const link = { id, longUrl };
+  const link = { id, longUrl, clicks: 0 };
   app.locals.db.urls.data.push(link);
 
   if (!longUrl) {
