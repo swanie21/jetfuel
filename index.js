@@ -15,10 +15,6 @@ app.locals.db = {
   }
 };
 
-//
-// { id: String, longUrl: String, visitCount: Number }
-//
-
 app.get('/', (request, response) => {
   fs.readFile(`${__dirname}/index.html`, (err, file) => {
     response.send(file);
@@ -26,8 +22,9 @@ app.get('/', (request, response) => {
 });
 
 app.get('/:id', (request, response) => {
-  const { id } = request.params;
-  const longUrl = app.locals.db[id];
+  let longUrl = app.locals.db.urls.data.find( (url) => {
+    return url.id === request.params.id;
+  }).longUrl;
 
   if(!longUrl) { return response.sendStatus(404); }
 
@@ -37,7 +34,7 @@ app.get('/:id', (request, response) => {
 app.post('/urls', (request, response) => {
   const { longUrl } = request.body;
   const id = shortid.generate();
-  const link = { id, longUrl, visitCount: 0 };
+  const link = { id, longUrl };
   app.locals.db.urls.data.push(link);
 
   if (!longUrl) {
