@@ -11,7 +11,11 @@ app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Tinyify';
 app.locals.db = {
   urls: {
-    data: []
+    data: [
+      {id:"HkrRLh2Ge",longUrl:"https://www.google.com/", clicks: 5, timestamp: 1480556223476},
+      {id:"asdfjkl", longUrl:"http://frontend.turing.io", clicks: 11, timestamp: 1480556245673},
+      {id:"qwerty", longUrl:"http://www.nytimes.com", clicks: 6, timestamp: 1480556267588},
+    ]
   }
 };
 
@@ -50,7 +54,7 @@ app.get('/:id', (request, response) => {
 app.post('/urls', (request, response) => {
   const { longUrl } = request.body;
   const id = shortid.generate();
-  const link = { id, longUrl, clicks: 0 };
+  const link = { id, longUrl, clicks: 0, timestamp: Date.now() };
   app.locals.db.urls.data.push(link);
 
   if (!longUrl) {
