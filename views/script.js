@@ -3,6 +3,7 @@ const host = window.location.origin;
 let mostPopularAreOnTop = true;
 let mostRecentAreOnTop = false;
 
+$.getJSON('/urls').then(console.log);
 
 $('.submit-button').on('click', (e) => {
   e.preventDefault();
@@ -55,4 +56,4 @@ const putUrlOnPage = (element) => {
   $urlDisplay.html(element);
 };
 
-displayByPopularity();
+// displayByPopularity();
