@@ -26,6 +26,12 @@ app.get('/', (request, response) => {
 });
 
 app.get('/urls', (request, response) => {
+  if (!app.locals.db.urls.data) {
+    return response.status(422).send({
+      error: 'No urls stored'
+    });
+  }
+
   response.json(app.locals.db.urls.data);
 });
 
