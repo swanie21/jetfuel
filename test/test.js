@@ -30,9 +30,7 @@ describe('GET /urls', () => {
   it('should return a set urls stored in app.locals.db.urls', (done) => {
     request(app)
       .get('/urls')
-      .expect(200, {
-        urls: app.locals.db.urls.data
-      }, done);
+      .expect(200, app.locals.db.urls.data, done);
   });
 });
 
