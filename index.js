@@ -46,7 +46,7 @@ app.get('/:id', (request, response) => {
     return url.id === request.params.id;
   });
 
-  if(!thisLink) { return response.sendStatus(404); }
+  if(!thisLink.longUrl) { return response.sendStatus(404); }
 
   response.redirect(301, thisLink.longUrl);
 });
