@@ -25,10 +25,6 @@ app.get('/', (request, response) => {
   });
 });
 
-// app.get('/urls', (request, response) => {
-//   response.send({ urls: app.locals.db.urls.data });
-// });
-
 app.get('/urls', (request, response) => {
   response.json(app.locals.db.urls.data);
 });

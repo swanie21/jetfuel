@@ -2,9 +2,9 @@
   "name": "y",
   "version": "1.0.0",
   "description": "URL shortener",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "test": "./node_modules/mocha/bin/mocha"
   },
   "author": "Casey Metz and Kyle Misencik",
