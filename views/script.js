@@ -11,10 +11,22 @@ $('.submit-button').on('click', (e) => {
   };
   $.post('/urls', data)
     .then(turnUrlsIntoElements)
-    .then(putUrlOnPage);
+    .then(displayUserUrl)
+    .catch((err) => console.error(err));
+  $('.long-url').val('');
 });
 
-$('.sort-by-clicks-button').on('click', ()=>{
+$('.long-url').on('keyup', () => {
+  let longUrl = $('.long-url').val();
+  $('.submit-button').attr('disabled', !longUrl);
+});
+
+const displayUserUrl = (arr) => {
+  userURL = arr[arr.length - 1];
+  $('.tiny-url').html(userURL);
+}
+
+$('.sort-by-clicks-button').on('click', () => {
   mostPopularAreOnTop = !mostPopularAreOnTop;
   displayByPopularity();
 });
@@ -24,11 +36,23 @@ $('.sort-by-time-button').on('click', ()=>{
   displayByTimestamp();
 });
 
+$('.search-input').on('keyup', function() {
+  let filter = $(this).val();
+  $('.link-row').each(function() {
+    if($(this).text().search(new RegExp(filter, 'i')) < 0) {
+      $(this).fadeOut();
+    } else {
+      $(this).fadeIn();
+    }
+  });
+});
+
 const displayByPopularity = () => {
   $.getJSON('/urls')
     .then(sortByClicks)
     .then(turnUrlsIntoElements)
-    .then(putUrlOnPage);
+    .then(putUrlOnPage)
+    .catch((err) => console.error(err));
 };
 
 const sortByClicks = (response) => {
@@ -47,7 +71,11 @@ const displayByTimestamp = () => {
 };
 
 const turnUrlsIntoElements = (response) => {
-  return response.map((link) => $(`<tr><td><a href='${link.shortUrl}' target='_blank'>${host}/${link.shortUrl}</a></td><td>Clicks: ${link.clicks}</td><td>Created: ${new Date(link.timestamp)}</td></tr>`) );
+  return response.map((link) => $(`<tr class='link-row'>
+    <td><a href='/urls/${link.shortUrl}' target='_blank'>${host}/${link.shortUrl}</a></td>
+    <td>Links to: ${link.longUrl}</td>
+    <td>Clicks: ${link.clicks}</td>
+    <td>Created: ${new Date(link.timestamp)}</td></tr>`) );
 };
 
 const putUrlOnPage = (element) => {

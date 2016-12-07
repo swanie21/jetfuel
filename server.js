@@ -17,17 +17,16 @@ app.use(express.static('views'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
 let port_number = process.env.PORT || 3000;
 
 app.locals.title = 'Tinyify';
 
 app.get('/', (req, res) => {
   Link.find(function(err, links) {
+    console.log(links);
     if (err) {
       res.send(err);
     }
-
     res.send(links);
   });
 });
@@ -37,8 +36,6 @@ app.get('/urls', function(req, res) {
     res.send(links);
   });
 });
-
-
 
 app.post('/urls', function(req, res) {
   var link = new Link({
@@ -58,7 +55,7 @@ app.post('/urls', function(req, res) {
   });
 });
 
-app.get('/:shortUrl', (request, response) => {
+app.get('/urls/:shortUrl', (request, response) => {
   Link.find({ shortUrl: request.params.shortUrl }, function(err, thisLink) {
     if(!thisLink[0].longUrl) { return response.sendStatus(404); }
     thisLink[0].clicks++;
